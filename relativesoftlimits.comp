@@ -1,0 +1,120 @@
+component relativesoftlimits "A component to set soft limits of one axis depending on the position of a second axis ";
+pin in bit isyaxisconnected;
+pin in float axisxpos;
+pin in float axiszpos;
+pin in float toolxpos;
+pin in float toolzpos;
+
+pin in float xboundarypos;
+pin in float zboundarypos;
+
+pin in float xdefaultminlimit;
+pin in float zdefaultminlimit;
+pin in float xlimitingminlimit;
+pin in float zlimitingminlimit;
+pin in float xlimitingbyYminlimit;
+pin in float toolxregionstart;
+pin in float toolxregionend;
+pin in float toolzregionstart;
+pin in float toolzregionend;
+
+pin out float xminlimit;
+pin out float zminlimit;
+
+pin out bit xrminlimitisset;
+pin out bit zrminlimitisset;
+pin out bit A_piston;
+pin out bit error;
+
+author "Tim Stehling";
+license "GPL";
+function _;
+
+;;
+
+FUNCTION(_){
+
+	if (xlimitingminlimit > xlimitingbyYminlimit) {	//checks given limits and throws error
+
+		error = false;
+
+	}else {
+
+		error = true;
+
+	}
+
+	if (!isyaxisconnected) {
+
+		if (axisxpos >= xboundarypos) {
+
+			zrminlimitisset = false;
+			zminlimit = zdefaultminlimit;
+
+		}else if (axisxpos < xboundarypos) {
+
+			zrminlimitisset = true;
+			zminlimit = zlimitingminlimit;
+
+		}
+
+		if (axiszpos >= zboundarypos) {
+
+			xrminlimitisset = false;
+			xminlimit = xdefaultminlimit;
+
+		}else if (axiszpos < zboundarypos) {
+
+			xrminlimitisset = true;
+			xminlimit = xlimitingminlimit;
+
+		}
+
+	}else {
+
+		if (axisxpos >= xboundarypos) {
+
+			zrminlimitisset = false;
+			zminlimit = zdefaultminlimit;
+
+		}else if (axisxpos < xboundarypos) {
+
+			zrminlimitisset = true;
+			zminlimit = zlimitingminlimit;
+
+		}
+
+		if (axiszpos >= zboundarypos) {
+
+			xrminlimitisset = false;
+			xminlimit = xlimitingbyYminlimit;
+
+		}else if (axiszpos < zboundarypos) {
+
+			xrminlimitisset = true;
+
+			if (xlimitingminlimit > xlimitingbyYminlimit) {
+
+				xminlimit = xlimitingminlimit;
+
+			}else {
+
+				xminlimit = xlimitingbyYminlimit;
+
+			}
+		}
+
+	}
+
+	//tool-preload on toolrest if tool on toolrest (positions in workcoordinates)
+	if (toolxregionstart <= toolxpos <= toolxregionend && toolzregionstart <= toolzpos <= toolzregionend) {
+
+		A_piston = true;
+
+	}else {
+
+		A_piston = false;
+
+	}
+
+}

@@ -1,0 +1,24 @@
+loadrt relativesoftlimits
+addf relativesoftlimits.0 servo-thread
+
+#in-pins
+net axisxpos relativesoftlimits.0.axisxpos <= axis.x.pos-cmd
+net axiszpos relativesoftlimits.0.axiszpos <= axis.z.pos-cmd
+
+#config
+setp relativesoftlimits.0.xboundarypos [RSL]XBOUNDARY	#if x-axis is over these coordinates the z-axis ist limited in their travel
+setp relativesoftlimits.0.zboundarypos [RSL]ZBOUNDARY	#if z-axis is over these coordinates the x-axis ist limited in their travel
+
+setp relativesoftlimits.0.xdefaultminlimit [AXIS_X]MIN_LIMIT	#normal x soft limits
+setp relativesoftlimits.0.zdefaultminlimit [AXIS_Z]MIN_LIMIT	#normale z soft limit
+
+setp relativesoftlimits.0.xlimitingminlimit [RSL]XLIMITINGLIMIT	#these are set as soft limits for the x-axis when the z-axis is over the ZBOUNDARY positon
+setp relativesoftlimits.0.zlimitingminlimit [RSL]ZLIMITINGLIMIT	#these are set as soft limits for the z-axis when the x-axis is over the XBOUNDARY positon
+setp relativesoftlimits.0.xlimitingbyYminlimit [RSL]XLIMITINGBYYLIMIT #these are set when y-axis is connected
+
+#out
+net axis-x_rsl ini.x.min_limit <= relativesoftlimits.0.xminlimit	#sets the limit for the x-axis
+net axis-z_rsl ini.z.min_limit <= relativesoftlimits.0.zminlimit	#sets the limit for the z-axis
+
+#alerts
+net alerterror errormessage.trigger <= relativesoftlimits.0.error #needs to be connected to throw error
