@@ -22,3 +22,5 @@ net axis-z_rsl ini.z.min_limit <= relativesoftlimits.0.zminlimit	#sets the limit
 
 #alerts
 net alerterror errormessage.trigger <= relativesoftlimits.0.error #needs to be connected to throw error
+#net alertxlimited xlimitedmessage.trigger <= relativesoftlimits.0.xrminlimitisset
+#net alertzlimited zlimitedmessage.trigger <= relativesoftlimits.0.zrminlimitisset
