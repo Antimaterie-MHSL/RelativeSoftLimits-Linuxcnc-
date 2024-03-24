@@ -1,6 +1,8 @@
 loadrt relativesoftlimits
 addf relativesoftlimits.0 servo-thread
 loadrt message names=errormessage= "gesetztes X-Limit(durch Y-Achse) größer als normales Limit(durch Z-Achse). Dies schränkt den Arbeitsbereich stark ein"
+addf errormessage servo-thread
+
 
 #in-pins
 net axisxpos relativesoftlimits.0.axisxpos <= axis.x.pos-cmd
